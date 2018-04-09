@@ -2,6 +2,7 @@
     "name": "book",
     "version": "0.0.0",
     "dependencies": {
-        "gitbook-plugin-": "*"
+        "gitbook-plugin-": "*",
+        "web3": "^1.0.0-beta.33"
     }
 }

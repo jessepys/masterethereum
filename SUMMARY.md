@@ -77,7 +77,7 @@
        * [权限管理](fabric/v0.6/membersrcv-usage.md)
        * [Python 客户端](fabric/v0.6/hyperledger-py.md)
    * [小结](fabric/summary.md)
-* [以太坊虚拟机和Gas](fabric/README.md) -pys
+* [以太坊虚拟机和Gas](evm/README.md) -pys
    * [简介](fabric/intro.md)
    * [使用 Fabric 1.0 版本](fabric/1.0.md)
    * [Fabric v0.6](fabric/v0.6/README.md)
