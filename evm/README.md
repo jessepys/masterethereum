@@ -9,7 +9,7 @@
 
 虚拟机技术（像Virtualbox, VMware)是在硬件和宿主操作系统上为每个客户操作系统虚拟一套独立于实际硬件的系统, 并处理系统调用，程序调度，资源管理等。
 
-但是像JAVA虚拟机，跟以太坊虚拟机做类似的事情。JAVA虚拟机提供一个运行的环境来隔离操作系统和硬件，使相同的代码能在不同的操作系统上运行。在JAVA虚拟机上运行的高级语言如：Java、Scala，它们根据虚拟机规范，编译成JVM的指令字节码。JVM针对不同的操作系统，根据JVM指令来调用操作系统的底层命令。以太坊虚拟机也需要将Solidity源代码编译，再在EVM上运行。
+以太坊虚拟机像JAVA虚拟机跟做类似的事情。JAVA虚拟机提供一个运行的环境来隔离操作系统和硬件，使相同的代码能在不同的操作系统上运行。在JAVA虚拟机上运行的高级语言如：Java、Scala，它们根据虚拟机规范，编译成JVM的指令字节码。JVM针对不同的操作系统，根据JVM指令来调用操作系统的底层命令。以太坊虚拟机也需要将Solidity源代码编译，再在EVM上运行。
 
 #### 以太坊虚拟机语法
 
@@ -64,7 +64,100 @@
 
 #### 以太坊虚拟机状态
 
-[[evm_state_descriptions]]
+
+
+#### 以太坊虚拟机执行图
+
+![Alt text](../pic/evm-state.png "架构图片")
+
+>> 指令集                            
+
+```
+	0X00 STOP
+	0X01 ADD
+	0x02 MUL
+	0x03 SUB
+	0x04 DIV
+	...
+```
+>> 执行环境
+
+```
+	Code Owner
+	(Address of accounts that owns executing code)
+	
+	Sender
+	(Sender address of transaction that originated this execution)
+	
+	Gas Price
+	(Price of gas in the transaction that originated this execution)
+	
+	Input Data
+	(Byte array, transaction data if execution agent is transaction)
+	
+	causer
+	(Address of account that caused the code to be executing)
+	
+	value
+	(Wei pass to this account as part of execution procedure)
+	
+	Machine Code
+	(Byte array of machine code to be executed)
+	
+	Block Header
+	(Block header of the present block)
+	
+	Message-call depth
+	(Number of CALLS or CREAES being executed at this present)
+```
+
+>> 子状态
+
+	Suicide Set
+	(Account to be discarded post transaction)
+	
+	Log series
+	(A series of archived indexable checkpoints that allow contract calls to be easily tracked externally)
+
+	Refund Balance
+	(Price of gas in the transaction that originated this exection)
+	
+
+>> 世界状态
+
+```
+	Address
+	(the member of transaction sent from this address or, in the case of accounts with associated code, or the member of contract creation made by this account)
+	
+	Account State
+	(the number of Wei owned by this address)
+	
+	Storage and code
+```
+
+>> 机器状态
+
+```
+	Gas available
+	Program counter
+	Memory contents
+	No words
+	Stack content
+
+```
+
+>> 迭代函数
+
+```
+	Get next instruction from machine code
+	Get items to add/to remove from stack
+	Update machine stack
+	Subtract gas used
+	Increment Program counter
+
+```
+
+[[evm_state_descriptions]] 
 ==== State
 
 As with any computing system, the concept of state is an important one. Just like a CPU keeping track of a process in execution, the EVM must keep track of the status of various components in order to support a transaction. The status or _state_ of these components ultimately drives the level of change in the overarching blockchain. This aspect leads to the description of Ethereum as a _transaction-based state machine_ containing the following components:
@@ -170,6 +263,7 @@ If you look in the _BytecodeDir_ directory, you will see the opcode file _exampl
 
 [[opcode_output]]
 ----
+
 PUSH1 0x60 PUSH1 0x40 MSTORE CALLVALUE ISZERO PUSH1 0xE JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST CALLER PUSH1 0x0 DUP1 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP PUSH1 0x35 DUP1 PUSH1 0x5B PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN STOP PUSH1 0x60 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT STOP LOG1 PUSH6 0x627A7A723058 KECCAK256 JUMP 0xb9 SWAP14 0xcb 0x1e 0xdd RETURNDATACOPY 0xec 0xe0 0x1f 0x27 0xc9 PUSH5 0x9C5ABCC14A NUMBER 0x5e INVALID EXTCODESIZE 0xdb 0xcf EXTCODESIZE 0x27 EXTCODESIZE 0xe2 0xb8 SWAP10 0xed 0x
 ----
 
